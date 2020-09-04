@@ -7,9 +7,9 @@ async function Qget(table){
                     select 
                     * 
                     from
-                    ?
+                    ${table}
                     where
-                    active = 1` , [table], 
+                    active = 1`, 
                 (error, results, fields) => {
                     connection.release()
                     if (error) reject(error) ;

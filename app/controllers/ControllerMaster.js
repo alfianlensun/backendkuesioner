@@ -1,6 +1,8 @@
 const { sendError, sendSuccess, sendUnsuccess } = require("../helpers/ResponseHelper")
 const { Qcreate,Qget } = require("../queries/Queries")
 const { 
+    QdeleteMstMataKuliah,
+    QdeleteMstSemester,
     QupdateMstDosen, 
     QdeleteMstDosen,
     QupdateMstMahasiswa,
@@ -69,8 +71,6 @@ async function getKuesionerMahasiswa(req, reply){
             }
             return returndata
         })
-
-        console.log(finaldata)
 
         sendSuccess(reply, finaldata)
     } catch (error) {
@@ -268,9 +268,77 @@ async function deleteKuesionerDetail(req, reply){
     }
 }
 
+async function getMasterSemester(req, reply){
+    try {
+        const result = await Qget('mst_semester')
+        sendSuccess(reply, result)
+    } catch(err){
+        console.log(err)
+        sendError(reply,JSON.stringify(error.message))
+    }
+}
 
+async function getMasterMK(req, reply){
+    try {
+        const result = await Qget('mst_mata_kuliah')
+        sendSuccess(reply, result)
+    } catch(err){
+        sendError(reply,JSON.stringify(error.message))
+    }
+}
+
+async function createMasterSemester(req, reply){
+    try {
+        const result = await Qcreate('mst_semester',{
+            nama_semester: req.body.namaSemester,
+        })
+
+        sendSuccess(reply, result)
+    } catch(err){
+        sendError(reply,JSON.stringify(error.message))
+    }
+}
+
+async function createMasterMK(req, reply){
+    try {
+        const result = await Qcreate('mst_mata_kuliah',{
+            nama_mata_kuliah: req.body.namaMataKuliah,
+        })
+        sendSuccess(reply, result) 
+    } catch(err){
+        sendError(reply,JSON.stringify(error.message))
+    }
+}
+
+async function deleteSemester(req, reply){
+    try {
+        const result = await QdeleteMstSemester({
+            active: 0 
+        }, req.body.idMstSemester)
+        sendSuccess(reply, result)
+    } catch (error) {
+        sendError(reply,JSON.stringify(error.message))
+    }
+}
+
+async function deleteMataKuliah(req, reply){
+    try {
+        const result = await QdeleteMstMataKuliah({
+            active: 0
+        }, req.body.idMstMataKuliah)
+        sendSuccess(reply, result)
+    } catch (error) {
+        sendError(reply,JSON.stringify(error.message))
+    }
+}
 
 module.exports = {
+    getMasterMK,
+    deleteMataKuliah,
+    deleteSemester,
+    getMasterSemester,
+    createMasterMK,
+    createMasterSemester,
     getDosen,
     getMahasiswa,
     getKuesioner,

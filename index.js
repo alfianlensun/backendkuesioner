@@ -1,6 +1,6 @@
 
 const fastify = require('fastify')({
-  logger: false
+  logger: true
 })
 
 fastify.register(require('fastify-multipart'))
@@ -22,7 +22,7 @@ fastify.get('/', function(req, resp){
     copyright: 'Kuesioner ©'
   })
 })
-fastify.listen(4000, '192.168.43.168',function (err, address) {
+fastify.listen(4000, '0.0.0.0',function (err, address) {
   if (err) {
     fastify.log.error(err)
     process.exit(1)

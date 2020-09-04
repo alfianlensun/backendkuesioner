@@ -21,6 +21,12 @@ async function routes(fastify, option){
     fastify.put('/kuesioner/detail', controllerMaster.createKuesionerDetail)
     fastify.post('/kuesioner/detail', controllerMaster.updateKuesionerDetail)
     fastify.delete('/kuesioner/detail', controllerMaster.deleteKuesionerDetail)
+    fastify.get('/mata-kuliah', controllerMaster.getMasterMK)
+    fastify.put('/mata-kuliah', controllerMaster.createMasterMK)
+    fastify.delete('/mata-kuliah', controllerMaster.deleteMataKuliah)
+    fastify.get('/semester', controllerMaster.getMasterSemester)
+    fastify.put('/semester', controllerMaster.createMasterSemester)
+    fastify.delete('/semester', controllerMaster.deleteSemester)
 }
 
 module.exports = routes
