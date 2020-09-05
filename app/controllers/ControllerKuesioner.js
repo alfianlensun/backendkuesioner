@@ -1,16 +1,26 @@
 const { sendError, sendSuccess, sendUnsuccess } = require("../helpers/ResponseHelper")
-const { Qcreate,Qget } = require("../queries/Queries")
+const { Qcreate,Qget, QgetAllKuesionerDiisi } = require("../queries/Queries")
 const { QgetKuesionerDiisi, QgetKuesionerDiisiById } = require("../queries/QueriesMaster")
 
 
 async function getKuesionerDiisi(req, reply){
     try {
-        const result = await QgetTrxKuesionerMahasiswa(req.params.IDMhs)
-        const kuesioner = await QgetMstKuesioner()
+        const result = await QgetAllKuesionerDiisi()
+        let list = {}
+        for (const jawaban of result ){
+            if (list[jawaban.id_mst_dosen+'-'+jawaban.id_mst_semester+'-'+jawaban.id_mst_kuesioner+'-'+jawaban.id_mst_mata_kuliah+'-'+jawaban.id_mst_kuesioner_detail] === undefined){
+                list[jawaban.id_mst_dosen+'-'+jawaban.id_mst_semester+'-'+jawaban.id_mst_kuesioner+'-'+jawaban.id_mst_mata_kuliah+'-'+jawaban.id_mst_kuesioner_detail] = jawaban
+            }
+        }
+        let finaldata = []
+        for (const data of Object.keys(list)){
+            finaldata.push(list[data])
+        }
 
-
+        sendSuccess(reply, finaldata)
     } catch(err){
-        sendError(reply,JSON.stringify(error.message))
+        console.log(err)
+        sendError(reply,JSON.stringify(err.message))
     }
 }
 

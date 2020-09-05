@@ -368,12 +368,61 @@ async function QgetKuesionerDiisiById(iddosen, idkuesioner, idpertanyaan){
     })
 }
 
+async function QgetMstMK(){
+    return new Promise((resolve, reject) => {
+        database.getConnection((err, connection) => {
+            if (err) throw err; 
+            connection.query(`
+                    select 
+                    *
+                    from 
+                    mst_mata_kuliah as a
+                    join mst_semester as b on a.id_mst_semester = b.id_mst_semester
+                    where 
+                    a.active = 1
+                    `, 
+                (error, results, fields) => {
+                    connection.release()
+                    if (error) reject(error) ;
+                    resolve(results)
+            });
+        });
+    })
+}
+
+async function QgetMstMKByIdSemester(id){
+    return new Promise((resolve, reject) => {
+        database.getConnection((err, connection) => {
+            if (err) throw err; 
+            connection.query(`
+                    select 
+                    *
+                    from 
+                    mst_mata_kuliah as a
+                    join mst_semester as b on a.id_mst_semester = b.id_mst_semester
+                    where 
+                    a.id_mst_semester = ?
+                    and
+                    a.active = 1
+                    `, [id],
+                (error, results, fields) => {
+                    connection.release()
+                    if (error) reject(error) ;
+                    resolve(results)
+            });
+        });
+    })
+}
+
+
 module.exports = {
+    QgetMstMKByIdSemester,
     QdeleteMstSemester,
     QdeleteMstMataKuliah,
     QgetKuesionerDiisiById,
     QgetKuesionerDiisi,
     QgetMstDosen,
+    QgetMstMK,
     QgetMstMahasiswa,
     QgetMstKuesioner,
     QgetTrxKuesionerMahasiswa,

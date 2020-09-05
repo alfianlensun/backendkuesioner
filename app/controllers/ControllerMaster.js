@@ -10,12 +10,14 @@ const {
     QupdateMstKuesioner,
     QdeleteMstKuesioner,
     QgetMstDosen,
+    QgetMstMK,
     QgetMstMahasiswa,
     QgetMstKuesioner,
     QgetMstKuesionerDetail,
     QdeleteMstKuesionerDetail,
     QupdateMstKuesionerDetail,
-    QgetTrxKuesionerMahasiswa
+    QgetTrxKuesionerMahasiswa,
+    QgetMstMKByIdSemester
 } = require("../queries/QueriesMaster")
 const bcrypt  =require('bcrypt')
 const { createAuthUser, updateAuth } = require("../queries/QueriesAuth")
@@ -280,7 +282,16 @@ async function getMasterSemester(req, reply){
 
 async function getMasterMK(req, reply){
     try {
-        const result = await Qget('mst_mata_kuliah')
+        const result = await QgetMstMK()
+        sendSuccess(reply, result)
+    } catch(err){
+        sendError(reply,JSON.stringify(error.message))
+    }
+}
+
+async function getMasterMKByIdSemester(req, reply){
+    try {
+        const result = await QgetMstMKByIdSemester(req.params.id)
         sendSuccess(reply, result)
     } catch(err){
         sendError(reply,JSON.stringify(error.message))
@@ -290,7 +301,7 @@ async function getMasterMK(req, reply){
 async function createMasterSemester(req, reply){
     try {
         const result = await Qcreate('mst_semester',{
-            nama_semester: req.body.namaSemester,
+            nama_semester: req.body.namaSemester, 
         })
 
         sendSuccess(reply, result)
@@ -303,6 +314,7 @@ async function createMasterMK(req, reply){
     try {
         const result = await Qcreate('mst_mata_kuliah',{
             nama_mata_kuliah: req.body.namaMataKuliah,
+            id_mst_semester: req.body.idMstSemester
         })
         sendSuccess(reply, result) 
     } catch(err){
@@ -334,6 +346,7 @@ async function deleteMataKuliah(req, reply){
 
 module.exports = {
     getMasterMK,
+    getMasterMKByIdSemester,
     deleteMataKuliah,
     deleteSemester,
     getMasterSemester,
