@@ -3,6 +3,9 @@ const fastify = require('fastify')({
   logger: true
 })
 
+fastify.register(require('fastify-static'), {
+  root: __dirname,
+})
 fastify.register(require('fastify-multipart'))
 fastify.register(require('fastify-cors'), { 
   origin: '*',
